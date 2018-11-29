@@ -47,7 +47,6 @@ type Props<T> = SceneRendererProps<T> & {
 type State = {|
   visibility: Animated.Value,
   scrollAmount: Animated.Value,
-  initialOffset: ?{| x: number, y: number |},
 |};
 
 const useNativeDriver = Boolean(NativeModules.NativeAnimatedModule);
@@ -93,21 +92,9 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
       }
     }
 
-    const initialOffset =
-      this.props.scrollEnabled && this.props.layout.width
-        ? {
-            x: this._getScrollAmount(
-              this.props,
-              this.props.navigationState.index
-            ),
-            y: 0,
-          }
-        : undefined;
-
     this.state = {
       visibility: new Animated.Value(initialVisibility),
       scrollAmount: new Animated.Value(0),
-      initialOffset,
     };
   }
 
@@ -408,7 +395,6 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
             onScrollEndDrag={this._handleEndDrag}
             onMomentumScrollBegin={this._handleMomentumScrollBegin}
             onMomentumScrollEnd={this._handleMomentumScrollEnd}
-            contentOffset={this.state.initialOffset}
             ref={el => (this._scrollView = el && el.getNode())}
           >
             {routes.map((route, i) => {
